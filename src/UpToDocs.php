@@ -50,6 +50,7 @@ final class UpToDocs
 
                 try {
                     $process->mustRun();
+                    echo ".";
                 } catch (ProcessFailedException $exception) {
                     $location = realpath($markdownFile).":".$node->getStartLine();
                     echo "The following code block in $location failed.\n";
@@ -63,7 +64,7 @@ final class UpToDocs
                 }
             }
         }
-
+        echo "\nOk.";
         return true;
     }
 
