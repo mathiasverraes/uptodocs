@@ -53,7 +53,7 @@ final class UpToDocs
                     echo ".";
                 } catch (ProcessFailedException $exception) {
                     $location = realpath($markdownFile).":".$node->getStartLine();
-                    echo "The following code block in $location failed.\n";
+                    echo "\nThe following code block in $location failed.\n";
                     if (!is_null($preludeFile)) {
                         echo "(using prelude $preludeFile)\n";
                     }
