@@ -3,11 +3,12 @@
 
 use Verraes\UpToDocs\Main;
 
-$locations = [__DIR__ . '/vendor/autoload.php', __DIR__ . '/../autoload.php', __DIR__ . '/../../vendor/autoload.php'];
+$locations = [__DIR__ . '/vendor/autoload.php', __DIR__ . '/../autoload.php', __DIR__ . '/../../autoload.php'];
 foreach ($locations as $location) {
     if (file_exists($location)) {
         require_once $location;
         exit(Main::main());
     }
-
 }
+echo "Couldn't autoload";
+exit(1);
