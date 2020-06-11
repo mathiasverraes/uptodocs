@@ -2,8 +2,6 @@
 
 namespace Verraes\UpToDocs;
 
-require_once __DIR__ . '/../vendor/autoload.php';
-
 use Symfony\Component\Console\Application;
 
 final class Main
@@ -13,6 +11,5 @@ final class Main
         $application = new Application("UpToDocs", "1.0.0");
         $application->add(new RunCommand());
         return $application->run();
-
     }
 }
