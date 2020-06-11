@@ -56,8 +56,8 @@ final class UpToDocs
                     if (!is_null($preludeFile)) {
                         echo "(using prelude $preludeFile)\n";
                     }
-                    echo $node->getStringContent() . "\n";
-                    echo "==================\n";
+                    echo $node->getStringContent();
+                    echo "\n";
                     echo $exception->getProcess()->getErrorOutput();
                     return false;
                 }

@@ -1,7 +1,12 @@
 {
     "name": "mathiasverraes/uptodocs",
+    "description": "UpToDocs scans a Markdown file for PHP code blocks, and execute each one in a sandbox. Include this in your CI workflows, to make sure your documentation is always up to date with your code.",
     "type": "library",
+    "keywords": ["documentation","testing", "CI"],
+    "homepage": "https://github.com/mathiasverraes/uptodocs",
+    "license": "MIT",
     "require": {
+        "php": "^7.4",
         "league/commonmark": "^1.4",
         "symfony/process": "^5.1",
         "symfony/console": "5.2.x-dev"
@@ -9,12 +14,15 @@
     "authors": [
         {
             "name": "Mathias Verraes",
-            "email": "mathias@verraes.net"
+            "email": "mathias@verraes.net",
+            "homepage": "https://verraes.net",
+            "role": "Developer"
         }
     ],
     "autoload": {
         "psr-4": {
             "Verraes\\UpToDocs\\": "src/"
         }
-    }
+    },
+    "bin": ["bin/uptodocs"]
 }

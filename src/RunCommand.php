@@ -15,7 +15,7 @@ final class RunCommand extends Command
         $this
             ->setName('run')
             ->setDescription('Run each PHP block in a markdown file and return an error when one fails.')
-            ->addArgument('markdownFile', InputArgument::REQUIRED, 'Markdown file to run')
+            ->addArgument('markdownFile', InputArgument::REQUIRED, 'Markdown file to run.')
             ->addArgument('preludeFile', InputArgument::OPTIONAL, 'A PHP file to run before each code block. Useful for imports and other setup code.');
     }
 
