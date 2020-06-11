@@ -3,12 +3,12 @@
 
 use Verraes\UpToDocs\Main;
 
-$locations = [__DIR__ . '/vendor/autoload.php', __DIR__ . '/../autoload.php', __DIR__ . '/../../autoload.php'];
-foreach ($locations as $location) {
-    if (file_exists($location)) {
-        require_once $location;
+foreach ([__DIR__ . '/../../autoload.php', __DIR__ . '/vendor/autoload.php'] as $file) {
+    if (file_exists($file)) {
+        require $file;
         exit(Main::main());
     }
 }
-echo "Couldn't autoload";
+
+echo "Can't find autoload. Did you run composer install?";
 exit(1);
