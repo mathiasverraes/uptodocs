@@ -1,6 +1,6 @@
 # UpToDocs
 
-UpToDocs scans a Markdown file for PHP code blocks, and execute each one in a sandbox. 
+UpToDocs scans a Markdown file for PHP code blocks, and executes each one in a separate process.
 
 Include this in your CI workflows, to make sure your documentation is always up to date with your code.
 
@@ -42,7 +42,6 @@ The following code block in /Users/mathias/workspace/php/uptodocs/README.md:27 f
 $upToDocs = new Verraes\UpToDocs\UpToDocs();
 $result = $upToDocs->run("README.md", "prelude.php"); // bool
 
-==================
 PHP Fatal error:  Uncaught Error: Class 'Verraes\UpToDocs\UpToDocs' not found in Standard input code:4
 Stack trace:
 #0 {main}
