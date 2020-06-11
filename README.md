@@ -34,7 +34,7 @@ $result = $upToDocs->run("README.md", "prelude.php"); // bool
 
 You can try it on this README file you are reading. 
 
-Run `bin/uptodocs run README.md` and see an error message like this: 
+Run `./uptodocs run README.md` and see an error message like this: 
 
 ```
 The following code block in /Users/mathias/workspace/php/uptodocs/README.md:27 failed.
@@ -48,5 +48,5 @@ Stack trace:
   thrown in Standard input code on line 4
 ```
 
-The problem here was that `vendor/autoload.php` wasn't included, but we can fix that by adding the prelude: `bin/uptodocs run README.md prelude.php`. (But don't actually run that, you'll create an infinite loop!)
+The problem here was that `vendor/autoload.php` wasn't included, but we can fix that by adding the prelude: `./uptodocs run README.md prelude.php`. (But don't actually run that, you'll create an infinite loop!)
 
