@@ -8,7 +8,7 @@ Include this in your CI workflows, to make sure your documentation is always up 
 ## Usage
 
 ```
-composer require-dev mathiasverraes/uptodocs
+composer require --dev mathiasverraes/uptodocs
 ```
 
 CLI:
