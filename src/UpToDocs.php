@@ -6,6 +6,7 @@ use League\CommonMark\Block\Element\FencedCode;
 use League\CommonMark\DocParser;
 use League\CommonMark\Environment;
 use League\CommonMark\Extension\CommonMarkCoreExtension;
+use League\CommonMark\Node\NodeWalkerEvent;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -13,6 +14,9 @@ final class UpToDocs
 {
     const TIMEOUT = 5;
     private DocParser $parser;
+    private string $before = "<?php";
+    private string $after = "";
+    private ?string $workingDir = null;
 
     function __construct()
     {
@@ -22,56 +26,83 @@ final class UpToDocs
     }
 
     /**
-     * Runs the
+     * Execute before each code block
      */
-    public function run(string $markdownFile, string $preludeFile = null): bool
+    public function before(string $beforeFile): UpToDocs
+    {
+        $this->before = file_get_contents($beforeFile);
+        if (is_null($this->workingDir)) {
+            $this->workingDir(dirname($beforeFile));
+        }
+        return $this;
+    }
+
+    /**
+     * The working directory to execute the code in
+     */
+    public function workingDir(string $workingDir): UpToDocs
+    {
+        $this->workingDir = $workingDir;
+        return $this;
+    }
+
+    /**
+     * Execute after each code block
+     */
+    public function after(string $afterFile): UpToDocs
+    {
+        $this->after = self::dropOpeningTag(file_get_contents($afterFile));
+        return $this;
+    }
+
+    private static function dropOpeningTag(string $phpCode): string
+    {
+        return str_replace(["<?php", "declare(strict_types=1);"], "", $phpCode);
+    }
+
+    /**
+     * Run each code block in the markdownFile, output to STDOUT.
+     *
+     * @return bool True for successfully running all code blocks, false when one of them fails.
+     */
+    public function run(string $markdownFile): bool
     {
         $input = file_get_contents($markdownFile);
-
-        if (is_null($preludeFile)) {
-            $prelude = "<?php\n";
-            $workingDir = dirname($markdownFile);
-        } else {
-            $prelude = file_get_contents($preludeFile);
-            $workingDir = dirname($preludeFile);
+        if (is_null($this->workingDir)) {
+            $this->workingDir = dirname($markdownFile);
         }
 
         $document = $this->parser->parse($input);
         $walker = $document->walker();
         while ($event = $walker->next()) {
-            $node = $event->getNode();
-            if (
-                $node instanceof FencedCode
-                && $event->isEntering()
-                && $node->getInfo() === 'php') {
+            if (self::isPHPBlock($event)) {
+                $node = $event->getNode();
 
-                $code = $prelude . "\n" . self::dropOpeningTag($node->getStringContent());
-                $process = new Process(['php'], $workingDir, null, $code, self::TIMEOUT);
+                $codeBlock = $node->getStringContent();
+                $code = $this->before . "\n" . self::dropOpeningTag($codeBlock) . "\n" . $this->after;
+                $process = new Process(['php'], $this->workingDir, null, $code, self::TIMEOUT);
 
                 try {
                     $process->mustRun();
                     echo ".";
                 } catch (ProcessFailedException $exception) {
-                    $location = realpath($markdownFile).":".$node->getStartLine();
+                    $location = realpath($markdownFile) . ":" . $node->getStartLine();
                     echo "\nThe following code block in $location failed.\n";
-                    if (!is_null($preludeFile)) {
-                        echo "(using prelude $preludeFile)\n";
-                    }
-                    echo $node->getStringContent();
+                    echo $codeBlock;
                     echo "\n";
                     echo $exception->getProcess()->getErrorOutput();
                     return false;
                 }
             }
         }
-        echo "\nOk.";
+        echo "\nOk.\n";
         return true;
     }
 
-    private static function dropOpeningTag(string $phpCode): string
+    private static function isPHPBlock(NodeWalkerEvent $event): bool
     {
-        return str_replace("<?php", "", $phpCode);
+        return $event->getNode() instanceof FencedCode
+            && $event->isEntering()
+            && $event->getNode()->getInfo() === 'php';
     }
-
 }
-

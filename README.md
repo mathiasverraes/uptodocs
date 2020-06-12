@@ -14,12 +14,16 @@ composer require --dev mathiasverraes/uptodocs
 CLI:
 
 ```
-vendor/bin/uptodocs run <markdownFile> [<preludeFile>]
+vendor/bin/uptodocs run [options] [--] <markdownFile>
 
 Arguments:
-  markdownFile  Markdown file to run.
-  preludeFile   A PHP file to run before each code block. 
-                Useful for imports and other setup code.
+  markdownFile          Markdown file to run.
+
+Options:
+  -b, --before=BEFORE   A PHP file to run before each code block. 
+                        Useful for imports and other setup code.
+  -a, --after=AFTER     A PHP file to run after each code block. 
+                        Useful for cleanup, and for running assertions.
 ```
 
 In your code: 
@@ -27,26 +31,28 @@ In your code:
 ```php
 <?php
 $upToDocs = new Verraes\UpToDocs\UpToDocs();
-$result = $upToDocs->run("README.md", "prelude.php"); // bool
+$result = $upToDocs->run("README.md"); // bool
 ```
 
 ## Example
 
-You can try it on this README file you are reading. 
-
-Run `./uptodocs run README.md` and see an error message like this: 
+You can try it on the Markdown file in the sample directory:
 
 ```
-The following code block in /Users/mathias/workspace/php/uptodocs/README.md:27 failed.
+./uptodocs run sample/docs.md --before sample/before.php
+```
+                                                
+Output:
+ 
+```
+The following code block in /Users/mathias/workspace/php/uptodocs/sample/docs.md:16 failed.
 <?php
-$upToDocs = new Verraes\UpToDocs\UpToDocs();
-$result = $upToDocs->run("README.md", "prelude.php"); // bool
+$v = multiplyy(10,2);
 
-PHP Fatal error:  Uncaught Error: Class 'Verraes\UpToDocs\UpToDocs' not found in Standard input code:4
+PHP Fatal error:  Uncaught Error: Call to undefined function multiplyy() in Standard input code:11
 Stack trace:
 #0 {main}
-  thrown in Standard input code on line 4
+  thrown in Standard input code on line 11
 ```
 
-The problem here was that `vendor/autoload.php` wasn't included, but we can fix that by adding the prelude: `./uptodocs run README.md prelude.php`. (But don't actually run that, you'll create an infinite loop!)
-
+UpToDocs discovered a typo in our sample code. Oops!
