@@ -19,7 +19,7 @@ final class RunCommand extends Command
             ->addArgument('markdownFile', InputArgument::REQUIRED, 'Markdown file to run.')
             ->addOption('before', 'b',  InputOption::VALUE_REQUIRED, 'A PHP file to run before each code block. Useful for imports and other setup code.', null)
             ->addOption('after', 'a',  InputOption::VALUE_REQUIRED, 'A PHP file to run after each code block. Useful for cleanup, and for running assertions.', null)
-            ->addOption('output', 'o',  InputOption::VALUE_REQUIRED, 'Output format. Available formats: console|github.', 'console')
+            ->addOption('output-format', 'f',  InputOption::VALUE_REQUIRED, 'Output format. Available formats: console|github.', 'console')
         ;
     }
 
@@ -27,7 +27,7 @@ final class RunCommand extends Command
     {
         $beforeFile = $input->getOption('before');
         $afterFile = $input->getOption('after');
-        $report = self::report($input->getOption('output'));
+        $report = self::report($input->getOption('output-format'));
         $markdown = $input->getArgument('markdownFile');
 
         $upToDocs = new UpToDocs($report);
