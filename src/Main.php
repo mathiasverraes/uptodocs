@@ -8,7 +8,7 @@ final class Main
 {
     static function main(): int
     {
-        $application = new Application("UpToDocs", "1.0.0");
+        $application = new Application("UpToDocs");
         $application->add(new RunCommand());
         return $application->run();
     }

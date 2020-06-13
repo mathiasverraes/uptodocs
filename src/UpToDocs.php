@@ -17,12 +17,14 @@ final class UpToDocs
     private string $before = "<?php";
     private string $after = "";
     private ?string $workingDir = null;
+    private Report $report;
 
-    function __construct()
+    function __construct(Report $report)
     {
         $environment = new Environment();
         $environment->addExtension(new CommonMarkCoreExtension());
         $this->parser = new DocParser($environment);
+        $this->report = $report;
     }
 
     /**
@@ -74,6 +76,7 @@ final class UpToDocs
 
         $document = $this->parser->parse($input);
         $walker = $document->walker();
+        $success = true;
         while ($event = $walker->next()) {
             if (self::isPHPBlock($event)) {
                 $node = $event->getNode();
@@ -84,19 +87,14 @@ final class UpToDocs
 
                 try {
                     $process->mustRun();
-                    echo ".";
+                    $this->report->success();
                 } catch (ProcessFailedException $exception) {
-                    $location = realpath($markdownFile) . ":" . $node->getStartLine();
-                    echo "\nThe following code block in $location failed.\n";
-                    echo $codeBlock;
-                    echo "\n";
-                    echo $exception->getProcess()->getErrorOutput();
-                    return false;
+                    $this->report->failure($markdownFile, $node->getStartLine(), $exception->getProcess()->getErrorOutput());
+                    $success = false;
                 }
             }
         }
-        echo "\nOk.\n";
-        return true;
+        return $success;
     }
 
     private static function isPHPBlock(NodeWalkerEvent $event): bool

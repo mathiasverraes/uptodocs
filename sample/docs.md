@@ -11,11 +11,25 @@ This is how you do multiplication:
 $v = multiply(1,2);
 ```
 
-And another:
+And another, but with a type:
 
 ```php
 <?php
 $v = multiplyy(10,2);
 ```
 
-This last example has a typo, so UpToDocs will catch this. 
+Another wrong one:
+
+```php
+<?php
+$v = divide(10,2);
+```
+
+Another good one:
+
+```php
+<?php
+$v = multiply(3,4);
+assert($v == 12);
+```
+
