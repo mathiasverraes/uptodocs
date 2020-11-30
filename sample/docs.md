@@ -11,7 +11,7 @@ This is how you do multiplication:
 $v = multiply(1,2);
 ```
 
-And another, but with a type:
+And another, but with a typo:
 
 ```php
 <?php
