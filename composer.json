@@ -6,7 +6,7 @@
     "homepage": "https://github.com/mathiasverraes/uptodocs",
     "license": "MIT",
     "require": {
-        "php": "^7.4",
+        "php": "^7.4 || ^8.0",
         "league/commonmark": "^1.4",
         "symfony/process": "^5.0",
         "symfony/console": "^5.0"
